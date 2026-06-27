@@ -13,6 +13,8 @@ public class Main {
         do {
             System.out.println("=== SISTEMA DE CREDITO ===");
             System.out.println("1- Para Cadastrar Cliente.");
+            System.out.println("2- Para listar Clientes.");
+            System.out.println("3- Cadastrar novo Empréstimo.");
             System.out.println("0- Para encerrar o Programa.");
 
             opcao = teclado.nextInt();
@@ -62,6 +64,51 @@ public class Main {
                         clienteDao.cadastrarCliente(clienteAtual);
                         System.out.println("Cliente " + clienteAtual.getNome() + " cadastrado com sucesso!\n");
                     }
+
+                }
+                case 2 -> {
+
+                    List<Cliente> todosClientes = clienteDao.listarClientes();
+
+                    System.out.println("Total clientes cadastrados: " + todosClientes.size() + "\n");
+
+                    for (Cliente clienteDaVez : todosClientes) {
+                        
+                        System.out.println("ID: " + clienteDaVez.getId());
+                        System.out.println("NOME: " + clienteDaVez.getNome());
+                        System.out.println("CPF: " + clienteDaVez.getCpf());
+                        System.out.println("CELULAR: " + clienteDaVez.getCelular());
+                        System.out.println("Rua " + clienteDaVez.getRua() + " Número " + clienteDaVez.getNumero() + " Bairro " + clienteDaVez.getBairro() + "\n");
+                    }
+                }
+
+                case 3 -> {
+
+                    System.out.println("=== CADASTRO DE EMPRÉSTIMO ===");
+
+                    System.out.println("Digite o ID do cliente Dono :");
+                    int clienteId = teclado.nextInt();
+                    Cliente clienteDono = new Cliente();
+                    clienteDono.setId(clienteId);
+
+                    System.out.println("Digite o valor do Empréstimo: ");
+                    double valorPuro = teclado.nextDouble();
+
+                    System.out.println("Digite o número de parcelas: ");
+                    int totalParcelas = teclado.nextInt();
+
+                    double taxaAplicada = 0.20;
+                    double totalComJuros = valorPuro + (valorPuro * taxaAplicada);
+                    double saldoDevedor = totalComJuros;
+                    int parcelasPagas = 0;
+                    java.time.LocalDate dataHoje = java.time.LocalDate.now();
+
+                    EmprestimoDAO emprestimoDao = new EmprestimoDAO();
+
+                    Emprestimo novoEmprestimo = new Emprestimo(0, valorPuro, taxaAplicada, totalComJuros, saldoDevedor, totalParcelas, parcelasPagas, dataHoje, clienteDono);
+
+                    emprestimoDao.novoEmprestimo(novoEmprestimo);
+
 
                 }
                 case 0 -> {

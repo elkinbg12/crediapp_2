@@ -1,6 +1,9 @@
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.sql.ResultSet;
 
 public class ClienteDAO {
     
@@ -23,5 +26,36 @@ public class ClienteDAO {
              } catch(SQLException e) {
                 System.out.println("Erro ao cadastrar Cliente" + e.getMessage());
              }
+    }
+
+    public List<Cliente> listarClientes() {
+
+         String sql = "SELECT * FROM cliente";
+         List<Cliente> lista = new ArrayList<>();
+
+         try (Connection conn = ConexaoBanco.conectar();
+              PreparedStatement stmt = conn.prepareStatement(sql);
+              ResultSet rs = stmt.executeQuery()) {
+
+               while (rs.next()) {
+
+                  Cliente cliente = new Cliente();
+
+                  cliente.setId(rs.getInt("id"));
+                  cliente.setNome(rs.getString("nome"));
+                  cliente.setCpf(rs.getString("cpf"));
+                  cliente.setCelular(rs.getString("celular"));
+                  cliente.setRua(rs.getString("rua"));
+                  cliente.setNumero(rs.getString("numero"));
+                  cliente.setBairro(rs.getString("bairro"));
+                  cliente.setComplemento(rs.getString("complemento"));
+
+                  lista.add(cliente);
+               }
+              } catch (SQLException e) {
+                  System.out.println("Erro ao listar clientes. " + e.getMessage());
+              }
+
+              return lista;
     }
 }
